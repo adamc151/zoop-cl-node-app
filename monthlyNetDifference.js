@@ -29,7 +29,7 @@ function parseText(data) {
     calculate(transactions);
 }
 
-function calculate(transactions) {
+calculate = function(transactions) {
 
     var currentMonth = transactions[0].date.format('M');
     var prevMonth = transactions[0].date.format('M');

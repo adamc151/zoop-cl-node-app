@@ -5,6 +5,8 @@ var moment = require('moment');
 moment().toDate();
 var data = '';
 
+var monthMap = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
 function parseText(data) {
     var dateIndex = data.match(/Date:.*(?=\s)/);
     //var descriptionIndex = data.match(/Description:.*(?=\s)/);
@@ -47,7 +49,7 @@ calculate = function(transactions) {
             total+=element.amount;
         }
         else{
-            monthValues.push({net: Math.round(total*100)/100, date: element.date.format('DD/MM/YYYY') /*, month: prevMonth, year: prevYear*/});
+            monthValues.push({net: Math.round(total*100)/100, date: monthMap[prevMonth-1] + ' ' + prevYear /*element.date.format('DD/MM/YYYY') , month: prevMonth, year: prevYear*/});
             total=element.amount;
         }
 

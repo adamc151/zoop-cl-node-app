@@ -49,7 +49,7 @@ calculate = function(transactions) {
             total+=element.amount;
         }
         else{
-            monthValues.push({net: Math.round(total*100)/100, date: monthMap[prevMonth-1] + ' ' + prevYear /*element.date.format('DD/MM/YYYY') , month: prevMonth, year: prevYear*/});
+            monthValues.push({ date: monthMap[prevMonth-1] + ' ' + prevYear, net: Math.round(total*100)/100 /*element.date.format('DD/MM/YYYY') , month: prevMonth, year: prevYear*/});
             total=element.amount;
         }
 
@@ -67,7 +67,7 @@ reverseAndAddDifference = function(monthValues){
 
     monthValues.forEach(function(element){
         // element.diff = ((prev - element.net)/((element.net + prev)/2))*100 + '%';
-        element.diff = Math.round(element.net - prev*100)/100;
+        element.diff = Math.round((element.net - prev)*100)/100;
         prev = element.net;
     });
     console.log(monthValues);

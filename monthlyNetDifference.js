@@ -47,24 +47,23 @@ function calculate(transactions) {
             total+=element.amount;
         }
         else{
-            monthValues.push({net: Math.round(total*100)/100, month: prevMonth, year: prevYear/*, difference: (Math.round(((total/prevTotal)*100) *100)/100)-100 + '%'*/});
+            monthValues.push({net: Math.round(total*100)/100, month: prevMonth, year: prevYear});
             total=element.amount;
         }
 
         prevMonth = currentMonth;
     });
 
-    reverseAndAddDifference(monthValues);
-    
+    reverseAndAddDifference(monthValues);    
 }
 
 reverseAndAddDifference = function(monthValues){
+    
     monthValues.reverse();
     var prev = monthValues[0].net;
+
     monthValues.forEach(function(element){
         element.diff = ((element.net - prev)/((element.net + prev)/2))*100; + '%';
-
-        
         prev = element.net;
     });
     console.log(monthValues);

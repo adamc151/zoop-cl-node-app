@@ -54,8 +54,6 @@ function calculate(transactions) {
         prevMonth = currentMonth;
     });
 
-    // console.log(monthValues);
-
     reverseAndAddDifference(monthValues);
     
 }

@@ -47,11 +47,12 @@ function calculate(transactions) {
             total+=element.amount;
         }
         else{
-            monthValues.push({net: Math.round(total*100)/100, month: prevMonth, year: prevYear});
+            monthValues.push({net: Math.round(total*100)/100, date: element.date.format('DD/MM/YYYY') /*, month: prevMonth, year: prevYear*/});
             total=element.amount;
         }
 
         prevMonth = currentMonth;
+        prevYear = currentYear;
     });
 
     reverseAndAddDifference(monthValues);    
@@ -63,7 +64,8 @@ reverseAndAddDifference = function(monthValues){
     var prev = monthValues[0].net;
 
     monthValues.forEach(function(element){
-        element.diff = ((prev - element.net)/((element.net + prev)/2))*100 + '%';
+        // element.diff = ((prev - element.net)/((element.net + prev)/2))*100 + '%';
+        element.diff = element.net - prev;
         prev = element.net;
     });
     console.log(monthValues);

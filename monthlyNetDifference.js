@@ -63,7 +63,7 @@ reverseAndAddDifference = function(monthValues){
     var prev = monthValues[0].net;
 
     monthValues.forEach(function(element){
-        element.diff = ((element.net - prev)/((element.net + prev)/2))*100; + '%';
+        element.diff = ((prev - element.net)/((element.net + prev)/2))*100 + '%';
         prev = element.net;
     });
     console.log(monthValues);

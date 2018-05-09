@@ -19,8 +19,6 @@ function parseText(data) {
         transactionDate.isValid();
         var transactionDescription = descriptionIndex[0].slice(13);
         var transactionAmount = parseFloat(amountIndex[0].slice(8));
-
-        console.log(balanceIndex[0].slice(9));
         var transactionBalance = parseFloat(balanceIndex[0].slice(9));
 
         data = data.slice(amountIndex.index + 1);

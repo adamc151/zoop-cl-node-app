@@ -12,6 +12,7 @@ function parseText(data) {
     //var descriptionIndex = data.match(/Description:.*(?=\s)/);
     var descriptionIndex = data.match(/Description:.*\s/);
     var amountIndex = data.match(/Amount:.*\.[0-9]{2}/);
+    var balanceIndex = data.match(/Balance:.*\.[0-9]{2}/);
 
     while (dateIndex && descriptionIndex && amountIndex) {
         var transactionDate = moment(dateIndex[0], 'DD/MM/YYYY');
@@ -19,13 +20,17 @@ function parseText(data) {
         var transactionDescription = descriptionIndex[0].slice(13);
         var transactionAmount = parseFloat(amountIndex[0].slice(8));
 
+        console.log(balanceIndex[0].slice(9));
+        var transactionBalance = parseFloat(balanceIndex[0].slice(9));
+
         data = data.slice(amountIndex.index + 1);
 
-        transactions.push({ date: transactionDate, description: transactionDescription, amount: transactionAmount });
+        transactions.push({ date: transactionDate, description: transactionDescription, amount: transactionAmount, balance: transactionBalance });
 
         dateIndex = data.match(/Date:.*(?=\s)/);
         descriptionIndex = data.match(/Description:.*(?=\s)/);
         amountIndex = data.match(/Amount:.*\.[0-9]{2}/);
+        balanceIndex = data.match(/Balance:.*\.[0-9]{2}/);
     }
 
     calculate(transactions);
@@ -33,52 +38,29 @@ function parseText(data) {
 
 calculate = function(transactions) {
 
-    var currentMonth = transactions[0].date.format('M');
-    var prevMonth = transactions[0].date.format('M');
+    var prevMonth = 0
     var currentYear = transactions[0].date.format('Y');
     var prevYear = transactions[0].date.format('Y');
     var monthValues = [];
     var total=0;
+    var balance=0;
+
+    transactions.reverse();
 
     transactions.forEach(function(element){
         
         currentMonth = element.date.format('M');
         currentYear = element.date.format('Y');
-        
-        if(currentMonth == prevMonth && element!=transactions[transactions.length-1]){
-            total+=element.amount;
-        }
-        else{
-            monthValues.push({ date: monthMap[prevMonth-1] + ' ' + prevYear, net: Math.round(total*100)/100 /*element.date.format('DD/MM/YYYY') , month: prevMonth, year: prevYear*/});
-            total=element.amount;
-        }
+        balance = element.balance;
 
-        prevMonth = currentMonth;
-        prevYear = currentYear;
+        if(currentMonth!=prevMonth)
+        {
+            prevMonth=currentMonth;
+            monthValues.push({date: monthMap[currentMonth-1] + ' ' + currentYear, balance: balance});
+        }
     });
 
-    reverseAndAddDifference(monthValues);    
-}
-
-reverseAndAddDifference = function(monthValues){
-    
-    monthValues.reverse();
-    var prev = monthValues[0].net;
-    var total = 0;
-    var i=0;
-
-    monthValues.forEach(function(element){
-        // element.diff = ((prev - element.net)/((element.net + prev)/2))*100 + '%';
-        element.diff = Math.round((element.net - prev)*100)/100;
-        prev = element.net;
-        if(i>1){
-            total+=element.net;
-        }
-        i++
-    });
-    
     console.log(monthValues);
-    console.log(total/(monthValues.length-2));
 }
 
 var stream = fs.createReadStream(CSVFILE);
